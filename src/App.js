@@ -1,23 +1,23 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import { useEffect, useRef } from "react";
+
 
 function App() {
+  const video = useRef(null);
+  useEffect(() => {
+    navigator.mediaDevices
+      .getUserMedia({ video: { width: 1280, height: 720 } })
+      .then((stream) => {
+        video.current.srcObject=stream;
+      })
+      .catch((err) => {
+        console.log("Hata meydana geldi"+ err);
+      });
+  }, []);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <video ref={video} autoPlay muted></video>
     </div>
   );
 }
