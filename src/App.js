@@ -1,9 +1,11 @@
 import "./App.css";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 function App() {
   const video = useRef(null);
   const canvas = useRef(null);
+  const [barcode,setBarcode]=useState(null);
+  const [basket,setBasket]=useState([]);
 
   const openCam = () => {
     navigator.mediaDevices
@@ -30,7 +32,7 @@ function App() {
           barcodeDetector
             .detect(canvas.current)
             .then((barcodes) => {
-              barcodes.forEach((barcode) => console.log(barcode.rawValue));
+              barcodes.forEach((barcode) => {if(data){setBarcode(data.rawValue)}});
             })
             .catch((err) => {
               console.log(err);
@@ -42,6 +44,13 @@ function App() {
       });
   };
 
+  useEffect(()=>{
+    if(barcode){
+      //veritabanı lazım veritabanına burada istek atman lazım
+    }
+  },[barcode])
+
+
   return (
     <div className="App">
       <div>
@@ -49,6 +58,18 @@ function App() {
         <canvas ref={canvas}></canvas>
       </div>
       <button onClick={openCam}>Kamerayı Aç</button>
+      {barcode && 
+        <div>
+          Bulunan barkod:{barcode}  
+        </div>
+        }
+        {basket && basket.map((item,index)=>{
+          return <div key={index}>
+            {item.product} <br></br>
+            {item.price} <br></br>
+            <img src={item.image} style={{width:100,height:100}}></img>
+          </div>
+        })}
     </div>
   );
 }
